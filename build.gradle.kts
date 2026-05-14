@@ -51,7 +51,6 @@ tasks {
         relocate("com.github.benmanes.caffeine", "ru.deelter.multieconomy.libs.caffeine")
         relocate("com.mysql", "ru.deelter.multieconomy.libs.mysql")
         relocate("org.sqlite", "ru.deelter.multieconomy.libs.sqlite")
-        relocate("org.h2", "ru.deelter.multieconomy.libs.h2")
         archiveClassifier.set("")
         mergeServiceFiles()
     }
