@@ -16,7 +16,7 @@ public class EcoCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
         if (!sender.hasPermission("multieconomy.admin")) {
-            Component msg = MultiEconomy.getInstance().getLang().getMessage("error.no_permission", sender);
+            Component msg = MultiEconomy.getInstance().getLang().getMessage("error-no_permission", sender);
             if (msg != null) sender.sendMessage(msg);
             return true;
         }
@@ -30,14 +30,14 @@ public class EcoCommand implements CommandExecutor {
         try {
             amount = Double.parseDouble(args[2]);
         } catch (NumberFormatException e) {
-            Component msg = MultiEconomy.getInstance().getLang().getMessage("error.invalid_amount", sender);
+            Component msg = MultiEconomy.getInstance().getLang().getMessage("error-invalid_amount", sender);
             if (msg != null) sender.sendMessage(msg);
             return true;
         }
         String currencyId = args.length > 3 ? args[3] : MultiEconomy.getInstance().getEconomyManager().getPrimaryCurrency().getId();
         Currency currency = MultiEconomy.getInstance().getEconomyManager().getCurrencies().get(currencyId);
         if (currency == null) {
-            Component msg = MultiEconomy.getInstance().getLang().getMessage("error.currency_not_found", sender);
+            Component msg = MultiEconomy.getInstance().getLang().getMessage("error-currency_not_found", sender);
             if (msg != null) sender.sendMessage(msg);
             return true;
         }
@@ -46,7 +46,7 @@ public class EcoCommand implements CommandExecutor {
         switch (action) {
             case "give" -> {
                 MultiEconomy.getInstance().getEconomyManager().addBalance(target.getUniqueId(), currencyId, amount);
-                Component msg = lang.getMessage("admin.give", sender,
+                Component msg = lang.getMessage("admin-give", sender,
                         "amount", String.valueOf(amount),
                         "currency_icon", currency.getIconMiniMessage(),
                         "currency_name", currency.getName(),
@@ -56,7 +56,7 @@ public class EcoCommand implements CommandExecutor {
             }
             case "take" -> {
                 MultiEconomy.getInstance().getEconomyManager().removeBalance(target.getUniqueId(), currencyId, amount);
-                Component msg = lang.getMessage("admin.take", sender,
+                Component msg = lang.getMessage("admin-take", sender,
                         "amount", String.valueOf(amount),
                         "currency_icon", currency.getIconMiniMessage(),
                         "currency_name", currency.getName(),
@@ -66,7 +66,7 @@ public class EcoCommand implements CommandExecutor {
             }
             case "set" -> {
                 MultiEconomy.getInstance().getEconomyManager().setBalance(target.getUniqueId(), currencyId, amount);
-                Component msg = lang.getMessage("admin.set", sender,
+                Component msg = lang.getMessage("admin-set", sender,
                         "balance", String.valueOf(amount),
                         "currency_icon", currency.getIconMiniMessage(),
                         "currency_name", currency.getName(),

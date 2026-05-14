@@ -64,7 +64,7 @@ public class EconomyManager {
 		Currency currency = currencies.get(currencyId);
 		if (currency == null) throw new IllegalArgumentException("Unknown currency: " + currencyId);
 		double oldBalance = getBalance(holderId, currencyId);
-		double clamped = Math.min(Math.max(newBalance, 0), currency.getMaxBalance());
+		double clamped = Math.clamp(newBalance, 0, currency.getMaxBalance());
 		double rounded = currency.round(clamped);
 
 		EconomyBalanceChangeEvent event = new EconomyBalanceChangeEvent(holderId, currencyId, oldBalance, rounded);
@@ -75,8 +75,8 @@ public class EconomyManager {
 
 		Player player = Bukkit.getPlayer(holderId);
 		if (player != null && player.isOnline()) {
-			// Анимация изменения баланса
-			EconomyVisualiser.addOperation(player, currency, event.getNewBalance());
+			// Передаём старый баланс и новый
+			EconomyVisualiser.addOperation(player, currency, oldBalance, event.getNewBalance());
 		}
 	}
 

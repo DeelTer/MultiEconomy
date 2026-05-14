@@ -12,23 +12,28 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static ru.deelter.multieconomy.utils.EconomyUtils.SOUND_COINS_DROP_MULTIPLY;
+import static ru.deelter.multieconomy.utils.EconomyUtils.SOUND_COINS_DROP_SINGLE;
+
 public class EconomyVisualiser {
 
     private static final Map<Player, VisualOperation[]> OPERATIONS = new HashMap<>();
-    private static boolean taskStarted = false;
+    private static BukkitRunnable task;
 
-    public static void addOperation(Player player, Currency currency, double newBalance) {
-        if (!taskStarted) startTask();
-        VisualOperation[] operations = OPERATIONS.computeIfAbsent(player, k -> new VisualOperation[MultiEconomy.getInstance().getEconomyManager().getCurrencies().size()]);
+    public static void addOperation(Player player, Currency currency, double oldBalance, double newBalance) {
         int index = getCurrencyIndex(currency);
+        VisualOperation[] operations = OPERATIONS.computeIfAbsent(player, k -> new VisualOperation[MultiEconomy.getInstance().getEconomyManager().getCurrencies().size()]);
         VisualOperation operation = operations[index];
 
         if (operation == null) {
-            double current = MultiEconomy.getInstance().getEconomyManager().getBalance(player.getUniqueId(), currency.getId());
-            operation = new VisualOperation(currency, current, newBalance, currency.getMaxBalance());
+            operation = new VisualOperation(currency, oldBalance, newBalance, currency.getMaxBalance());
             operations[index] = operation;
         } else {
             operation.setNewBalance(newBalance);
+        }
+
+        if (task == null || task.isCancelled()) {
+            startTask();
         }
     }
 
@@ -42,13 +47,13 @@ public class EconomyVisualiser {
     }
 
     private static void startTask() {
-        taskStarted = true;
-        new BukkitRunnable() {
+        task = new BukkitRunnable() {
             @Override
             public void run() {
                 tick();
             }
-        }.runTaskTimerAsynchronously(MultiEconomy.getInstance(), 1L, 1L);
+        };
+        task.runTaskTimer(MultiEconomy.getInstance(), 1L, 1L);
     }
 
     private static void tick() {
@@ -72,15 +77,13 @@ public class EconomyVisualiser {
                 }
             }
             if (shouldPlaySound) {
-                player.playSound(EconomyUtils.getDropSingleSound());
+                player.playSound(SOUND_COINS_DROP_SINGLE);
             }
-
-            Component actionBar = Component.join(JoinConfiguration.builder().separator(Component.text(" ")).build(),
+            player.sendActionBar(Component.join(JoinConfiguration.builder().separator(Component.text(" ")).build(),
                     Arrays.stream(operations)
                             .filter(Objects::nonNull)
                             .map(VisualOperation::toComponent)
-                            .toList());
-            player.sendActionBar(actionBar);
+                            .toList()));
 
             boolean uncompleted = false;
             for (int i = 0; i < operations.length; i++) {
@@ -90,10 +93,15 @@ public class EconomyVisualiser {
                     uncompleted = true;
                     continue;
                 }
-                player.playSound(EconomyUtils.getDropMultiplySound());
+                player.playSound(SOUND_COINS_DROP_MULTIPLY);
                 operations[i] = null;
             }
             return !uncompleted;
         });
+
+        if (OPERATIONS.isEmpty() && task != null) {
+            task.cancel();
+            task = null;
+        }
     }
 }

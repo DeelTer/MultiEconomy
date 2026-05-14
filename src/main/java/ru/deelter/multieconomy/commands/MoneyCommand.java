@@ -23,7 +23,7 @@ public class MoneyCommand implements CommandExecutor {
         if (args.length >= 1) {
             target = Bukkit.getOfflinePlayer(args[0]);
             if (!target.hasPlayedBefore() && !target.isOnline()) {
-                Component msg = lang.getMessage("error.player_not_found", sender);
+                Component msg = lang.getMessage("error-player-not-found", sender);
                 if (msg != null) sender.sendMessage(msg);
                 return true;
             }
@@ -38,7 +38,7 @@ public class MoneyCommand implements CommandExecutor {
         double balance = MultiEconomy.getInstance().getEconomyManager()
                 .getBalance(target.getUniqueId(), primary.getId());
 
-        String key = target.equals(sender) ? "money.show" : "money.other";
+        String key = target.equals(sender) ? "money-show" : "money-other";
         Component msg = lang.getMessage(key, sender,
                 "player", target.getName() != null ? target.getName() : "Unknown",
                 "balance", String.valueOf(balance),

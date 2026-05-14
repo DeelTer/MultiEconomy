@@ -66,9 +66,16 @@ public final class MultiEconomy extends JavaPlugin {
 
     private void registerCommands() {
         getCommand("money").setExecutor(new MoneyCommand());
+        getCommand("money").setTabCompleter(new MoneyTabCompleter());
+
         getCommand("pay").setExecutor(new PayCommand());
+        getCommand("pay").setTabCompleter(new PayTabCompleter());
+
         getCommand("eco").setExecutor(new EcoCommand());
+        getCommand("eco").setTabCompleter(new EcoTabCompleter());
+
         getCommand("balancetop").setExecutor(new BalanceTopCommand());
+        getCommand("balancetop").setTabCompleter(new BalanceTopTabCompleter());
     }
 
     @Override

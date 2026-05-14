@@ -56,8 +56,9 @@ public class VaultEconomyProvider implements Economy {
 
 	@Override
 	public @NotNull String format(@NotNull BigDecimal amount) {
-		return "";
+		return format(amount, primaryCurrency.getId());
 	}
+
 
 	@Override
 	public @NotNull String format(@NotNull String pluginName, @NotNull BigDecimal amount) {
@@ -66,7 +67,7 @@ public class VaultEconomyProvider implements Economy {
 
 	@Override
 	public @NotNull String format(@NotNull BigDecimal amount, @NotNull String currency) {
-		return "";
+		return format(getName(), amount, currency);
 	}
 
 	@Override
