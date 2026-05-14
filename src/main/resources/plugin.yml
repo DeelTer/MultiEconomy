@@ -1,0 +1,11 @@
+name: MultiEconomy
+description: $description
+prefix: MultiEconomy
+version: '${version}'
+
+main: ru.deelter.multieconomy.MultiEconomy
+api-version: '26.1.2'
+load: POSTWORLD
+
+authors: [ DeelTer ]
+website: https://deelter.ru
