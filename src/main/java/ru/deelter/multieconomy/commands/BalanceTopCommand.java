@@ -16,30 +16,30 @@ import java.util.UUID;
 
 public class BalanceTopCommand implements CommandExecutor {
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
-        String currencyId = args.length > 0 ? args[0] : MultiEconomy.getInstance().getEconomyManager().getPrimaryCurrency().getId();
-        Currency currency = MultiEconomy.getInstance().getEconomyManager().getCurrencies().get(currencyId);
-        if (currency == null) {
-            sender.sendMessage(Component.text("Currency not found", NamedTextColor.RED));
-            return true;
-        }
-        Map<UUID, Double> top = MultiEconomy.getInstance().getEconomyManager().getTopBalances(currencyId, 10);
-        if (top.isEmpty()) {
-            sender.sendMessage(Component.text("No data", NamedTextColor.YELLOW));
-            return true;
-        }
-        sender.sendMessage(Component.text("=== Top " + currency.getName() + " ===", NamedTextColor.GOLD));
-        int rank = 1;
-        for (Map.Entry<UUID, Double> entry : top.entrySet()) {
-            OfflinePlayer player = Bukkit.getOfflinePlayer(entry.getKey());
-            String name = player.getName() != null ? player.getName() : "Unknown";
-            Component line = Component.text(rank + ". " + name + ": ", NamedTextColor.WHITE)
-                    .append(currency.getIcon())
-                    .append(Component.text(" " + entry.getValue(), NamedTextColor.YELLOW));
-            sender.sendMessage(line);
-            rank++;
-        }
-        return true;
-    }
+	@Override
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
+		String currencyId = args.length > 0 ? args[0] : MultiEconomy.getInstance().getEconomyManager().getPrimaryCurrency().getId();
+		Currency currency = MultiEconomy.getInstance().getEconomyManager().getCurrencies().get(currencyId);
+		if (currency == null) {
+			sender.sendMessage(Component.text("Currency not found", NamedTextColor.RED));
+			return true;
+		}
+		Map<UUID, Double> top = MultiEconomy.getInstance().getEconomyManager().getTopBalances(currencyId, 10);
+		if (top.isEmpty()) {
+			sender.sendMessage(Component.text("No data", NamedTextColor.YELLOW));
+			return true;
+		}
+		sender.sendMessage(Component.text("=== Top " + currency.getName() + " ===", NamedTextColor.GOLD));
+		int rank = 1;
+		for (Map.Entry<UUID, Double> entry : top.entrySet()) {
+			OfflinePlayer player = Bukkit.getOfflinePlayer(entry.getKey());
+			String name = player.getName() != null ? player.getName() : "Unknown";
+			Component line = Component.text(rank + ". " + name + ": ", NamedTextColor.WHITE)
+					.append(currency.getIcon())
+					.append(Component.text(" " + entry.getValue(), NamedTextColor.YELLOW));
+			sender.sendMessage(line);
+			rank++;
+		}
+		return true;
+	}
 }

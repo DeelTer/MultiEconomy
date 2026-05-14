@@ -1,32 +1,108 @@
-storage-type: MYSQL
+# =================================================================
+#  MultiEconomy Configuration
+# =================================================================
+#  Multi-currency economy plugin with MySQL/SQLite/H2 support and VaultUnlockedAPI integration.
+#
+#  Commands:
+#    /money [player]              - Check your or another player's balance (primary currency)
+#    /pay <player> <amount>       - Send primary currency to another player
+#    /eco <give/take/set> <player> <amount> [currency] - Admin economy commands
+#    /balancetop [currency]       - Show top balances for a currency
+#
+#  Permissions:
+#    multieconomy.admin           - Access to /eco command (default: op)
+#    multieconomy.pay             - Access to /pay command (default: true)
+#    multieconomy.balance         - Access to /money and /balancetop (default: true)
+#
+#  Features:
+#    - Unlimited currencies with custom icons (MiniMessage format)
+#    - Per-currency: name, icon, max balance, transfer fee, decimal places
+#    - Smooth balance animations in ActionBar
+#    - MySQL, SQLite, H2 storage support
+#    - VaultUnlockedAPI compatible (primary currency only)
+#    - Fully configurable messages with MiniMessage and multiple languages
+# =================================================================
 
+# ========================
+# Storage Configuration
+# ========================
+# Database type for storing player balances.
+# Available types: MYSQL, SQLITE, H2
+#   - MYSQL: Remote/cloud database (requires connection settings below)
+#   - SQLITE: Embedded file-based database (plugins/MultiEconomy/economy.db)
+#   - H2: Alternative embedded database (plugins/MultiEconomy/economy.mv.db)
+storage-type: SQLITE
+
+# MySQL settings (only used when storage-type is MYSQL)
 database:
+  # Database server address
   host: localhost
+  # Database server port (default MySQL port is 3306)
   port: 3306
+  # Name of the database to use
   name: economy
+  # Username for database authentication
   user: root
+  # Password for database authentication
   password: ""
+  # Connection pool settings (HikariCP)
   pool:
+    # Maximum number of concurrent database connections
     maximum-pool-size: 10
+    # Minimum number of idle connections to maintain
     minimum-idle: 10
+    # Maximum lifetime of a connection in milliseconds (30 minutes = 1800000)
     maximum-lifetime: 300000
+    # How often to keep connection alive in milliseconds (30 seconds = 30000)
     keepalive-time: 30000
+    # Maximum time to wait for a connection before timing out (5 seconds = 5000)
     connection-timeout: 5000
 
+# ========================
+# Language Configuration
+# ========================
 language:
-  default: en
+  # Default language file to use (e.g., "en", "ru").
+  # Files are located in plugins/MultiEconomy/lang/
+  default: "en"
+  # If true, the plugin will use player's client language when available.
+  # Falls back to default if player's language is not supported.
   auto-detect: true
 
+# ========================
+# Currencies Configuration
+# ========================
+# Define unlimited currencies. The currency with `is-primary: true` will be
+# registered with VaultUnlockedAPI for other plugins to use.
+#
+# Each currency supports:
+#   - Custom icon with MiniMessage formatting (colors, gradients, etc.)
+#   - Individual max balance limits
+#   - Transfer restrictions and fees
+#   - Decimal places for precise economy systems
 currencies:
+  # Currency identifier (used in commands and database)
   coins:
+    # Display name of the currency
     name: "Coins"
+    # Icon with MiniMessage formatting. Supports colors, gradients, and custom fonts.
+    # Example: "<gradient:gold:yellow>⛁</gradient>" or "<#FFD700>⛁</#FFD700>"
     icon: "<gold>⛁</gold>"
+    # Starting balance for new players
     initial-balance: 100.0
+    # Maximum balance a player can hold (use -1 for unlimited)
     max-balance: 10000.0
+    # Whether players can transfer this currency to others via /pay
     transferable: true
+    # Fee percentage taken from transfers (e.g., 0.05 = 5%). Only applies to sender.
     transfer-fee: 0.0
+    # Whether this currency is the primary one (registered with Vault)
+    # Only ONE currency should have this set to true
     is-primary: true
+    # Number of decimal places for this currency (0 = whole numbers only)
     decimal-places: 2
+
+  # Additional currency example
   crystals:
     name: "Crystals"
     icon: "<light_purple>◆</light_purple>"
@@ -37,10 +113,55 @@ currencies:
     is-primary: false
     decimal-places: 0
 
+# ========================
+# Gameplay Settings
+# ========================
 settings:
+  # Percentage of coins (primary currency) lost upon player death.
+  # Example: 0.08 = 8% of current balance is removed.
+  # Set to 0.0 to disable death penalty.
   death-fee-percentage: 0.08
+
+  # How often (in seconds) the plugin automatically saves all balances to storage.
+  # Lower values = more frequent saves but higher database load.
+  # Recommended: 300-600 (5-10 minutes)
   save-interval-seconds: 600
 
+# ========================
+# Sound Effects
+# ========================
+# Custom sound keys for balance change animations.
+# These must be registered in your server's resource pack or use vanilla sounds.
+# Available vanilla sounds: https://minecraft.wiki/w/Sounds.json
+# Leave as-is if using default sounds from resource pack.
 sounds:
+  # Played when balance starts changing (single coin drop sound)
   drop-single: "custom.coins.drop.single"
+  # Played when animation completes (multiple coins drop)
   drop-multiply: "custom.coins.drop.multiply"
+
+# ========================
+# Language File Format
+# ========================
+# Language files use MiniMessage format. Test at: https://webui.advntr.dev/
+# Available placeholders per message:
+#
+# money-show / money-other:
+#   <player>, <balance>, <currency_icon>, <currency_name>
+#
+# transfer-success / transfer-fail-insufficient / transfer-fail-negative:
+#   <amount>, <currency_icon>, <currency_name>, <player>
+#
+# admin-give / admin-take / admin-set:
+#   <amount>, <currency_icon>, <currency_name>, <player> (set also uses <balance>)
+#
+# error-* messages: no placeholders
+#
+# To disable a specific message, leave its value empty (e.g., transfer-success: "")
+# The plugin will skip sending empty messages instead of sending blank lines.
+#
+# Example language file (plugins/MultiEconomy/lang/ru.yml):
+#   messages:
+#     money-show: "<gold>Ваш баланс: <currency_icon> <currency_name> <balance>"
+#     transfer-success: "<green>Вы перевели <amount> <currency_icon> <currency_name> игроку <player>"
+#     error-no-permission: "<red>У вас нет прав"

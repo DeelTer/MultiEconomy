@@ -9,21 +9,21 @@ import ru.deelter.multieconomy.MultiEconomy;
 
 public class EconomyListener implements Listener {
 
-    @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        MultiEconomy.getInstance().getEconomyManager()
-                .createDefaultAccount(event.getPlayer().getUniqueId());
-    }
+	@EventHandler
+	public void onJoin(PlayerJoinEvent event) {
+		MultiEconomy.getInstance().getEconomyManager()
+				.createDefaultAccount(event.getPlayer().getUniqueId());
+	}
 
-    @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
-        // Принудительно сохраняем баланс при выходе
-        MultiEconomy.getInstance().getEconomyManager().saveAll();
-    }
+	@EventHandler
+	public void onQuit(PlayerQuitEvent event) {
+		// Принудительно сохраняем баланс при выходе
+		MultiEconomy.getInstance().getEconomyManager().saveAll();
+	}
 
-    @EventHandler
-    public void onWorldSave(WorldSaveEvent event) {
-        // Периодическое сохранение (дублирует таймер, но не помешает)
-        MultiEconomy.getInstance().getEconomyManager().saveAll();
-    }
+	@EventHandler
+	public void onWorldSave(WorldSaveEvent event) {
+		// Периодическое сохранение (дублирует таймер, но не помешает)
+		MultiEconomy.getInstance().getEconomyManager().saveAll();
+	}
 }

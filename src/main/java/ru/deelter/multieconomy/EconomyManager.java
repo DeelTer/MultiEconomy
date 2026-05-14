@@ -30,16 +30,16 @@ public class EconomyManager {
 		for (Map.Entry<String, CurrencyConfig> entry : currencyConfigs.entrySet()) {
 			CurrencyConfig cfg = entry.getValue();
 			Currency currency = new Currency(
-					cfg.getId(),
-					cfg.getName(),
-					cfg.getIconMiniMessage(),
-					cfg.getMaxBalance(),
-					cfg.isTransferable(),
-					cfg.getTransferFee(),
-					cfg.isPrimary(),
-					cfg.getDecimalPlaces()
+					cfg.id(),
+					cfg.name(),
+					cfg.iconMiniMessage(),
+					cfg.maxBalance(),
+					cfg.transferable(),
+					cfg.transferFee(),
+					cfg.primary(),
+					cfg.decimalPlaces()
 			);
-			currencies.put(cfg.getId(), currency);
+			currencies.put(cfg.id(), currency);
 		}
 	}
 
@@ -64,7 +64,7 @@ public class EconomyManager {
 		Currency currency = currencies.get(currencyId);
 		if (currency == null) throw new IllegalArgumentException("Unknown currency: " + currencyId);
 		double oldBalance = getBalance(holderId, currencyId);
-		double clamped = Math.clamp(newBalance, 0, currency.getMaxBalance());
+		double clamped = Math.min(Math.max(newBalance, 0), currency.getMaxBalance());
 		double rounded = currency.round(clamped);
 
 		EconomyBalanceChangeEvent event = new EconomyBalanceChangeEvent(holderId, currencyId, oldBalance, rounded);
@@ -125,7 +125,7 @@ public class EconomyManager {
 	public void createDefaultAccount(UUID holderId) {
 		for (Currency currency : currencies.values()) {
 			CurrencyConfig config = MultiEconomy.getInstance().getConfigManager().getCurrencies().get(currency.getId());
-			double initial = config.getInitialBalance();
+			double initial = config.initialBalance();
 			if (initial > 0 && !hasAccount(holderId, currency.getId())) {
 				setBalance(holderId, currency.getId(), initial);
 			}

@@ -10,7 +10,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EconomyAccount {
-    private UUID holderId;
-    private String currencyId;
-    private double balance;
+	private UUID holderId;
+	private String currencyId;
+	private double balance;
 }

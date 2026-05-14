@@ -14,38 +14,38 @@ import ru.deelter.multieconomy.utils.Lang;
 
 public class MoneyCommand implements CommandExecutor {
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
-        Lang lang = MultiEconomy.getInstance().getLang();
-        Currency primary = MultiEconomy.getInstance().getEconomyManager().getPrimaryCurrency();
-        OfflinePlayer target;
+	@Override
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
+		Lang lang = MultiEconomy.getInstance().getLang();
+		Currency primary = MultiEconomy.getInstance().getEconomyManager().getPrimaryCurrency();
+		OfflinePlayer target;
 
-        if (args.length >= 1) {
-            target = Bukkit.getOfflinePlayer(args[0]);
-            if (!target.hasPlayedBefore() && !target.isOnline()) {
-                Component msg = lang.getMessage("error-player-not-found", sender);
-                if (msg != null) sender.sendMessage(msg);
-                return true;
-            }
-        } else {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage("Only players can check their own balance. Use /money <player>");
-                return true;
-            }
-            target = (Player) sender;
-        }
+		if (args.length >= 1) {
+			target = Bukkit.getOfflinePlayer(args[0]);
+			if (!target.hasPlayedBefore() && !target.isOnline()) {
+				Component msg = lang.getMessage("error-player-not-found", sender);
+				if (msg != null) sender.sendMessage(msg);
+				return true;
+			}
+		} else {
+			if (!(sender instanceof Player)) {
+				sender.sendMessage("Only players can check their own balance. Use /money <player>");
+				return true;
+			}
+			target = (Player) sender;
+		}
 
-        double balance = MultiEconomy.getInstance().getEconomyManager()
-                .getBalance(target.getUniqueId(), primary.getId());
+		double balance = MultiEconomy.getInstance().getEconomyManager()
+				.getBalance(target.getUniqueId(), primary.getId());
 
-        String key = target.equals(sender) ? "money-show" : "money-other";
-        Component msg = lang.getMessage(key, sender,
-                "player", target.getName() != null ? target.getName() : "Unknown",
-                "balance", String.valueOf(balance),
-                "currency_icon", primary.getIconMiniMessage(),
-                "currency_name", primary.getName()
-        );
-        if (msg != null) sender.sendMessage(msg);
-        return true;
-    }
+		String key = target.equals(sender) ? "money-show" : "money-other";
+		Component msg = lang.getMessage(key, sender,
+				"player", target.getName() != null ? target.getName() : "Unknown",
+				"balance", String.valueOf(balance),
+				"currency_icon", primary.getIconMiniMessage(),
+				"currency_name", primary.getName()
+		);
+		if (msg != null) sender.sendMessage(msg);
+		return true;
+	}
 }

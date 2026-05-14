@@ -13,15 +13,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MoneyTabCompleter implements TabCompleter {
-    @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        if (args.length == 1) {
-            // Предлагаем список онлайн игроков
-            return Bukkit.getOnlinePlayers().stream()
-                    .map(Player::getName)
-                    .filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase()))
-                    .collect(Collectors.toList());
-        }
-        return new ArrayList<>();
-    }
+	@Override
+	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+		if (args.length == 1) {
+			// Предлагаем список онлайн игроков
+			return Bukkit.getOnlinePlayers().stream()
+					.map(Player::getName)
+					.filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase()))
+					.collect(Collectors.toList());
+		}
+		return new ArrayList<>();
+	}
 }
