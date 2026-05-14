@@ -2,7 +2,6 @@ package ru.deelter.multieconomy;
 
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.deelter.multieconomy.commands.*;
 import ru.deelter.multieconomy.config.Config;
@@ -16,10 +15,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Getter
-public final class MultiEconomyPlugin extends JavaPlugin {
+public final class MultiEconomy extends JavaPlugin {
 
     @Getter
-    private static MultiEconomyPlugin instance;
+    private static MultiEconomy instance;
     private Config configManager;
     private ConnectionPool connectionPool;
     private EconomyDAO economyDAO;

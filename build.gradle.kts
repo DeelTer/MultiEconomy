@@ -1,34 +1,67 @@
 plugins {
-    id("java-library")
+    java
     id("xyz.jpenilla.run-paper") version "3.0.2"
+    id("com.gradleup.shadow") version "9.4.1"
 }
+
+group = "ru.deelter"
+version = "1.0"
+description = "Multi-currency economy plugin with MySQL/SQLite/H2 and Vault support"
 
 repositories {
     mavenCentral()
+    maven("https://repo.codemc.io/repository/creatorfromhell/")
     maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://jitpack.io")
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
+
+    implementation("org.bstats:bstats-bukkit:3.2.1")
+    implementation("com.zaxxer:HikariCP:5.1.0")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
+
+    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
+    compileOnly("net.milkbowl.vault:VaultUnlockedAPI:2.16")
+
+    compileOnly("org.jetbrains:annotations:24.1.0")
+    compileOnly("org.projectlombok:lombok:1.18.38")
+    annotationProcessor("org.projectlombok:lombok:1.18.38")
 }
 
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(25)
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+}
+
+tasks.processResources {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 tasks {
-    runServer {
-        // Configure the Minecraft version for our task.
-        // This is the only required configuration besides applying the plugin.
-        // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("26.1.2")
-        jvmArgs("-Xms2G", "-Xmx2G", "-Dcom.mojang.eula.agree=true")
+    compileJava {
+        options.encoding = "UTF-8"
     }
 
-    processResources {
-        val props = mapOf("version" to version, "description" to project.description)
-        filesMatching("plugin.yml") {
-            expand(props)
-        }
+    jar {
+        enabled = false
+    }
+
+    shadowJar {
+        relocate("com.zaxxer.hikari", "ru.deelter.multieconomy.libs.hikari")
+        relocate("com.github.benmanes.caffeine", "ru.deelter.multieconomy.libs.caffeine")
+        relocate("com.mysql", "ru.deelter.multieconomy.libs.mysql")
+        relocate("org.sqlite", "ru.deelter.multieconomy.libs.sqlite")
+        relocate("org.h2", "ru.deelter.multieconomy.libs.h2")
+        archiveClassifier.set("")
+        mergeServiceFiles()
+    }
+
+    assemble {
+        dependsOn(shadowJar)
+    }
+
+    runServer {
+        minecraftVersion("1.21.3")
+        jvmArgs("-Xms2G", "-Xmx2G", "-Dcom.mojang.eula.agree=true")
     }
 }

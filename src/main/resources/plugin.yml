@@ -1,11 +1,37 @@
 name: MultiEconomy
-description: $description
-prefix: MultiEconomy
-version: '${version}'
-
+version: 1.0
+description: 'Multiply currency'
 main: ru.deelter.multieconomy.MultiEconomy
-api-version: '26.1.2'
-load: POSTWORLD
-
-authors: [ DeelTer ]
+api-version: '1.21'
+authors: [Deelter]
 website: https://deelter.ru
+depend: [Vault]
+softdepend: []
+
+commands:
+  money:
+    description: Check your or another player's balance
+    usage: /money [player]
+    aliases: [bal, balance]
+  pay:
+    description: Send money to another player
+    usage: /pay <player> <amount>
+  eco:
+    description: Admin economy commands
+    usage: /eco <give/take/set> <player> <amount> [currency]
+    permission: multieconomy.admin
+  balancetop:
+    description: Show top balances
+    usage: /balancetop [currency]
+    aliases: [baltop, topmoney]
+
+permissions:
+  multieconomy.admin:
+    description: Allows all economy admin commands
+    default: op
+  multieconomy.pay:
+    description: Allows sending money to other players
+    default: true
+  multieconomy.balance:
+    description: Allows checking balance
+    default: true

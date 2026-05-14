@@ -1,0 +1,46 @@
+storage-type: MYSQL
+
+database:
+  host: localhost
+  port: 3306
+  name: economy
+  user: root
+  password: ""
+  pool:
+    maximum-pool-size: 10
+    minimum-idle: 10
+    maximum-lifetime: 300000
+    keepalive-time: 30000
+    connection-timeout: 5000
+
+language:
+  default: en
+  auto-detect: true
+
+currencies:
+  coins:
+    name: "Coins"
+    icon: "<gold>⛁</gold>"
+    initial-balance: 100.0
+    max-balance: 10000.0
+    transferable: true
+    transfer-fee: 0.0
+    is-primary: true
+    decimal-places: 2
+  crystals:
+    name: "Crystals"
+    icon: "<light_purple>◆</light_purple>"
+    initial-balance: 0.0
+    max-balance: 5000.0
+    transferable: false
+    transfer-fee: 0.0
+    is-primary: false
+    decimal-places: 0
+
+settings:
+  death-fee-percentage: 0.08
+  save-interval-seconds: 600
+
+sounds:
+  drop-single: "custom.coins.drop.single"
+  drop-multiply: "custom.coins.drop.multiply"
