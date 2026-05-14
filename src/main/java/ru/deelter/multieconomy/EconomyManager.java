@@ -28,18 +28,19 @@ public class EconomyManager {
 		this.dao = dao;
 		this.cache = new BalanceCache(dao);
 		for (Map.Entry<String, CurrencyConfig> entry : currencyConfigs.entrySet()) {
-			CurrencyConfig cfg = entry.getValue();
+			CurrencyConfig configuration = entry.getValue();
 			Currency currency = new Currency(
-					cfg.id(),
-					cfg.name(),
-					cfg.iconMiniMessage(),
-					cfg.maxBalance(),
-					cfg.transferable(),
-					cfg.transferFee(),
-					cfg.primary(),
-					cfg.decimalPlaces()
+					configuration.getId(),
+					configuration.getName(),
+					configuration.getIconMiniMessage(),
+					configuration.getColor(),
+					configuration.getMaxBalance(),
+					configuration.isTransferable(),
+					configuration.getTransferFee(),
+					configuration.isPrimary(),
+					configuration.getDecimalPlaces()
 			);
-			currencies.put(cfg.id(), currency);
+			currencies.put(configuration.getId(), currency);
 		}
 	}
 
@@ -125,7 +126,7 @@ public class EconomyManager {
 	public void createDefaultAccount(UUID holderId) {
 		for (Currency currency : currencies.values()) {
 			CurrencyConfig config = MultiEconomy.getInstance().getConfigManager().getCurrencies().get(currency.getId());
-			double initial = config.initialBalance();
+			double initial = config.getInitialBalance();
 			if (initial > 0 && !hasAccount(holderId, currency.getId())) {
 				setBalance(holderId, currency.getId(), initial);
 			}

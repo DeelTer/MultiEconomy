@@ -12,58 +12,72 @@ import ru.deelter.multieconomy.MultiEconomy;
 import ru.deelter.multieconomy.data.Currency;
 import ru.deelter.multieconomy.utils.Lang;
 
+import java.util.Map;
+
 public class PayCommand implements CommandExecutor {
 
-	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
-		if (!(sender instanceof Player player)) {
-			sender.sendMessage("Only players can use /pay");
-			return true;
-		}
-		if (!player.hasPermission("multieconomy.pay")) {
-			Component msg = MultiEconomy.getInstance().getLang().getMessage("error-no-permission", sender);
-			if (msg != null) sender.sendMessage(msg);
-			return true;
-		}
-		if (args.length < 2) {
-			sender.sendMessage("Usage: /pay <player> <amount>");
-			return true;
-		}
-		OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
-		if (!target.hasPlayedBefore() && !target.isOnline()) {
-			Component msg = MultiEconomy.getInstance().getLang().getMessage("error-player-not-found", sender);
-			if (msg != null) sender.sendMessage(msg);
-			return true;
-		}
-		double amount;
-		try {
-			amount = Double.parseDouble(args[1]);
-		} catch (NumberFormatException e) {
-			Component msg = MultiEconomy.getInstance().getLang().getMessage("error-invalid-amount", sender);
-			if (msg != null) sender.sendMessage(msg);
-			return true;
-		}
-		if (amount <= 0) {
-			Component msg = MultiEconomy.getInstance().getLang().getMessage("transfer-fail-negative", sender);
-			if (msg != null) sender.sendMessage(msg);
-			return true;
-		}
-		Currency primary = MultiEconomy.getInstance().getEconomyManager().getPrimaryCurrency();
-		boolean success = MultiEconomy.getInstance().getEconomyManager()
-				.transfer(player.getUniqueId(), target.getUniqueId(), primary.getId(), amount);
-		Lang lang = MultiEconomy.getInstance().getLang();
-		if (success) {
-			Component msg = lang.getMessage("transfer-success", sender,
-					"amount", String.valueOf(amount),
-					"currency_icon", primary.getIconMiniMessage(),
-					"currency_name", primary.getName(),
-					"player", target.getName() != null ? target.getName() : "Unknown"
-			);
-			if (msg != null) sender.sendMessage(msg);
-		} else {
-			Component msg = lang.getMessage("transfer-fail-insufficient", sender);
-			if (msg != null) sender.sendMessage(msg);
-		}
-		return true;
-	}
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage("Only players can use /pay");
+            return true;
+        }
+
+        Lang lang = MultiEconomy.getInstance().getLang();
+
+        if (!player.hasPermission("multieconomy.pay")) {
+            Component message = lang.getMessage("error-no-permission", sender);
+            if (message != null) sender.sendMessage(message);
+            return true;
+        }
+
+        if (args.length < 2) {
+            sender.sendMessage("Usage: /pay <player> <amount>");
+            return true;
+        }
+
+        OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+        if (!target.hasPlayedBefore() && !target.isOnline()) {
+            Component message = lang.getMessage("error-player-not-found", sender);
+            if (message != null) sender.sendMessage(message);
+            return true;
+        }
+
+        double amount;
+        try {
+            amount = Double.parseDouble(args[1]);
+        } catch (NumberFormatException exception) {
+            Component message = lang.getMessage("error-invalid-amount", sender);
+            if (message != null) sender.sendMessage(message);
+            return true;
+        }
+
+        if (amount <= 0) {
+            Component message = lang.getMessage("transfer-fail-negative", sender);
+            if (message != null) sender.sendMessage(message);
+            return true;
+        }
+
+        Currency primaryCurrency = MultiEconomy.getInstance().getEconomyManager().getPrimaryCurrency();
+        boolean success = MultiEconomy.getInstance().getEconomyManager()
+                .transfer(player.getUniqueId(), target.getUniqueId(), primaryCurrency.getId(), amount);
+
+        String targetName = target.getName() != null ? target.getName() : "Unknown";
+
+        if (success) {
+            Component message = lang.getMessage("transfer-success", sender,
+                    Map.of("currency_icon", primaryCurrency.getIcon()),
+                    Map.of(
+                            "amount", String.valueOf(amount),
+                            "currency_name", primaryCurrency.getName(),
+                            "player", targetName
+                    )
+            );
+            if (message != null) sender.sendMessage(message);
+        } else {
+            Component message = lang.getMessage("transfer-fail-insufficient", sender);
+            if (message != null) sender.sendMessage(message);
+        }
+        return true;
+    }
 }

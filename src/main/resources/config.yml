@@ -88,6 +88,7 @@ currencies:
     # Icon with MiniMessage formatting. Supports colors, gradients, and custom fonts.
     # Example: "<gradient:gold:yellow>⛁</gradient>" or "<#FFD700>⛁</#FFD700>"
     icon: "<gold>⛁</gold>"
+    color: "#F0CE5E"
     # Starting balance for new players
     initial-balance: 100.0
     # Maximum balance a player can hold (use -1 for unlimited)
@@ -106,6 +107,7 @@ currencies:
   crystals:
     name: "Crystals"
     icon: "<light_purple>◆</light_purple>"
+    color: "#CC93FE"
     initial-balance: 0.0
     max-balance: 5000.0
     transferable: false
