@@ -1,7 +1,6 @@
 messages:
   money-show: "<gold>Your balance: <currency_icon> <currency_name> <balance>"
   money-other: "<gold>Balance of <player>: <currency_icon> <currency_name> <balance>"
-  balance-change: "<green>Balance changed: <currency_icon> <currency_name> <balance>"
   transfer-success: "<green>You sent <amount> <currency_icon> <currency_name> to <player>"
   transfer-fail-insufficient: "<red>Insufficient funds"
   transfer-fail-negative: "<red>Amount must be positive"

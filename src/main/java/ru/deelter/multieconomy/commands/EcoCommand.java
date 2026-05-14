@@ -16,7 +16,7 @@ public class EcoCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
         if (!sender.hasPermission("multieconomy.admin")) {
-            Component msg = MultiEconomy.getInstance().getLang().getMessage("error-no_permission", sender);
+            Component msg = MultiEconomy.getInstance().getLang().getMessage("error-no-permission", sender);
             if (msg != null) sender.sendMessage(msg);
             return true;
         }
@@ -30,14 +30,14 @@ public class EcoCommand implements CommandExecutor {
         try {
             amount = Double.parseDouble(args[2]);
         } catch (NumberFormatException e) {
-            Component msg = MultiEconomy.getInstance().getLang().getMessage("error-invalid_amount", sender);
+            Component msg = MultiEconomy.getInstance().getLang().getMessage("error-invalid-amount", sender);
             if (msg != null) sender.sendMessage(msg);
             return true;
         }
         String currencyId = args.length > 3 ? args[3] : MultiEconomy.getInstance().getEconomyManager().getPrimaryCurrency().getId();
         Currency currency = MultiEconomy.getInstance().getEconomyManager().getCurrencies().get(currencyId);
         if (currency == null) {
-            Component msg = MultiEconomy.getInstance().getLang().getMessage("error-currency_not_found", sender);
+            Component msg = MultiEconomy.getInstance().getLang().getMessage("error-currency-not-found", sender);
             if (msg != null) sender.sendMessage(msg);
             return true;
         }

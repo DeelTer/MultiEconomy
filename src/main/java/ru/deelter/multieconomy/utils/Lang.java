@@ -83,7 +83,7 @@ public class Lang {
         return miniMessage.deserialize(raw, combined);
     }
 
-    // Метод для одного плейсхолдера (строка -> строка)
+    // Метод для одного плейсхолдера
     @Nullable
     public Component getMessage(@NotNull String key, @Nullable CommandSender sender, String placeholderKey, String value) {
         return getMessage(key, sender, Placeholder.unparsed(placeholderKey, value));

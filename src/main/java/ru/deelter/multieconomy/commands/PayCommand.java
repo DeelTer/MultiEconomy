@@ -21,7 +21,7 @@ public class PayCommand implements CommandExecutor {
             return true;
         }
         if (!player.hasPermission("multieconomy.pay")) {
-            Component msg = MultiEconomy.getInstance().getLang().getMessage("error.no_permission", sender);
+            Component msg = MultiEconomy.getInstance().getLang().getMessage("error-no-permission", sender);
             if (msg != null) sender.sendMessage(msg);
             return true;
         }
@@ -31,7 +31,7 @@ public class PayCommand implements CommandExecutor {
         }
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
         if (!target.hasPlayedBefore() && !target.isOnline()) {
-            Component msg = MultiEconomy.getInstance().getLang().getMessage("error.player_not_found", sender);
+            Component msg = MultiEconomy.getInstance().getLang().getMessage("error-player-not-found", sender);
             if (msg != null) sender.sendMessage(msg);
             return true;
         }
@@ -39,12 +39,12 @@ public class PayCommand implements CommandExecutor {
         try {
             amount = Double.parseDouble(args[1]);
         } catch (NumberFormatException e) {
-            Component msg = MultiEconomy.getInstance().getLang().getMessage("error.invalid_amount", sender);
+            Component msg = MultiEconomy.getInstance().getLang().getMessage("error-invalid-amount", sender);
             if (msg != null) sender.sendMessage(msg);
             return true;
         }
         if (amount <= 0) {
-            Component msg = MultiEconomy.getInstance().getLang().getMessage("transfer.fail_negative", sender);
+            Component msg = MultiEconomy.getInstance().getLang().getMessage("transfer-fail-negative", sender);
             if (msg != null) sender.sendMessage(msg);
             return true;
         }
@@ -53,7 +53,7 @@ public class PayCommand implements CommandExecutor {
                 .transfer(player.getUniqueId(), target.getUniqueId(), primary.getId(), amount);
         Lang lang = MultiEconomy.getInstance().getLang();
         if (success) {
-            Component msg = lang.getMessage("transfer.success", sender,
+            Component msg = lang.getMessage("transfer-success", sender,
                     "amount", String.valueOf(amount),
                     "currency_icon", primary.getIconMiniMessage(),
                     "currency_name", primary.getName(),
@@ -61,7 +61,7 @@ public class PayCommand implements CommandExecutor {
             );
             if (msg != null) sender.sendMessage(msg);
         } else {
-            Component msg = lang.getMessage("transfer.fail_insufficient", sender);
+            Component msg = lang.getMessage("transfer-fail-insufficient", sender);
             if (msg != null) sender.sendMessage(msg);
         }
         return true;
