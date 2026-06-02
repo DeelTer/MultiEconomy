@@ -13,7 +13,8 @@ public class BalanceCache {
 
 	private final EconomyDAO dao;
 	private final Cache<CacheKey, Double> cache;
-	private final Set<CacheKey> dirtyKeys = ConcurrentHashMap.newKeySet();
+	// Stores unsaved balances; survives Caffeine eviction
+	private final Map<CacheKey, Double> pendingSaves = new ConcurrentHashMap<>();
 
 	public BalanceCache(EconomyDAO dao) {
 		this.dao = dao;
@@ -21,9 +22,7 @@ public class BalanceCache {
 				.expireAfterAccess(30, TimeUnit.MINUTES)
 				.maximumSize(10_000)
 				.removalListener((key, value, cause) -> {
-					if (cause.wasEvicted() && value != null) {
-						dirtyKeys.add((CacheKey) key);
-					}
+					// pendingSaves already holds the value if dirty — nothing extra needed
 				})
 				.build();
 	}
@@ -43,20 +42,21 @@ public class BalanceCache {
 	public void set(UUID holderId, String currencyId, double balance) {
 		CacheKey key = new CacheKey(holderId, currencyId);
 		cache.put(key, balance);
-		dirtyKeys.add(key);
+		pendingSaves.put(key, balance);
 	}
 
 	public void invalidate(UUID holderId, String currencyId) {
 		CacheKey key = new CacheKey(holderId, currencyId);
 		cache.invalidate(key);
-		dirtyKeys.remove(key);
+		pendingSaves.remove(key);
 	}
 
 	public void flushDirty() {
-		if (dirtyKeys.isEmpty()) return;
+		if (pendingSaves.isEmpty()) return;
 		Map<UUID, Map<String, Double>> updates = new HashMap<>();
-		for (CacheKey key : dirtyKeys) {
-			Double balance = cache.getIfPresent(key);
+		Set<CacheKey> toFlush = new HashSet<>(pendingSaves.keySet());
+		for (CacheKey key : toFlush) {
+			Double balance = pendingSaves.get(key);
 			if (balance != null) {
 				updates.computeIfAbsent(key.holderId(), k -> new HashMap<>())
 						.put(key.currencyId(), balance);
@@ -64,15 +64,7 @@ public class BalanceCache {
 		}
 		if (!updates.isEmpty()) {
 			dao.batchSaveOrUpdate(updates);
-			// Удаляем только те ключи, которые были реально сохранены
-			Set<CacheKey> savedKeys = new HashSet<>();
-			for (Map.Entry<UUID, Map<String, Double>> entry : updates.entrySet()) {
-				UUID uuid = entry.getKey();
-				for (String curId : entry.getValue().keySet()) {
-					savedKeys.add(new CacheKey(uuid, curId));
-				}
-			}
-			dirtyKeys.removeAll(savedKeys);
+			pendingSaves.keySet().removeAll(toFlush);
 		}
 	}
 
@@ -86,6 +78,15 @@ public class BalanceCache {
 
 	public boolean hasKey(UUID holderId, String currencyId) {
 		return cache.asMap().containsKey(new CacheKey(holderId, currencyId));
+	}
+
+	public void invalidatePlayer(UUID holderId) {
+		cache.asMap().keySet().stream()
+				.filter(k -> k.holderId().equals(holderId))
+				.forEach(k -> {
+					cache.invalidate(k);
+					pendingSaves.remove(k);
+				});
 	}
 
 	public record CacheKey(UUID holderId, String currencyId) {

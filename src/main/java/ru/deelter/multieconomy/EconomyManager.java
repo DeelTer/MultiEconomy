@@ -123,6 +123,10 @@ public class EconomyManager {
 		cache.shutdown();
 	}
 
+	public void refreshPlayer(UUID holderId) {
+		cache.invalidatePlayer(holderId);
+	}
+
 	public void createDefaultAccount(UUID holderId) {
 		for (Currency currency : currencies.values()) {
 			CurrencyConfig config = MultiEconomy.getInstance().getConfigManager().getCurrencies().get(currency.getId());

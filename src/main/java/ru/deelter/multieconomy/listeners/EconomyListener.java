@@ -11,8 +11,9 @@ public class EconomyListener implements Listener {
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
-		MultiEconomy.getInstance().getEconomyManager()
-				.createDefaultAccount(event.getPlayer().getUniqueId());
+		var manager = MultiEconomy.getInstance().getEconomyManager();
+		manager.refreshPlayer(event.getPlayer().getUniqueId());
+		manager.createDefaultAccount(event.getPlayer().getUniqueId());
 	}
 
 	@EventHandler
