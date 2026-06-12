@@ -6,7 +6,8 @@ api-version: '1.21'
 authors: [Deelter]
 website: https://deelter.ru
 depend: [Vault]
-softdepend: []
+softdepend:
+  - MiniPlaceholders
 
 commands:
   money:

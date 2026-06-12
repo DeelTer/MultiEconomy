@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.deelter.multieconomy.commands.*;
 import ru.deelter.multieconomy.config.Config;
+import ru.deelter.multieconomy.placeholder.MiniPlaceholdersExpansion;
 import ru.deelter.multieconomy.database.ConnectionPool;
 import ru.deelter.multieconomy.database.DatabaseInitializer;
 import ru.deelter.multieconomy.database.DatabaseType;
@@ -44,6 +45,12 @@ public final class MultiEconomy extends JavaPlugin {
 
 		registerCommands();
 		Bukkit.getPluginManager().registerEvents(new EconomyListener(), this);
+
+		if (Bukkit.getPluginManager().getPlugin("MiniPlaceholders") != null) {
+			MiniPlaceholdersExpansion.register(this);
+		} else {
+			getLogger().warning("MiniPlaceholders not found! Skipping expansion registration.");
+		}
 
 		// Регистрация VaultUnlockedAPI
 		if (Bukkit.getPluginManager().getPlugin("Vault") != null) {

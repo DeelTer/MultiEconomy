@@ -2,6 +2,7 @@ plugins {
     java
     id("xyz.jpenilla.run-paper") version "3.0.2"
     id("com.gradleup.shadow") version "9.4.1"
+    id("io.freefair.lombok") version "9.5.0"
 }
 
 group = "ru.deelter"
@@ -12,6 +13,8 @@ repositories {
     mavenCentral()
     maven("https://repo.codemc.io/repository/creatorfromhell/")
     maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://repo.codemc.io/repository/maven-public/")
+    maven("https://repo.codemc.io/repository/creatorfromhell/")
     maven("https://jitpack.io")
 }
 
@@ -21,16 +24,15 @@ dependencies {
     implementation("com.zaxxer:HikariCP:5.1.0")
     implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
 
-    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
+    compileOnly("io.github.miniplaceholders:miniplaceholders-api:3.2.0")
     compileOnly("net.milkbowl.vault:VaultUnlockedAPI:2.16")
 
     compileOnly("org.jetbrains:annotations:24.1.0")
-    compileOnly("org.projectlombok:lombok:1.18.38")
-    annotationProcessor("org.projectlombok:lombok:1.18.38")
 }
 
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    toolchain.languageVersion = JavaLanguageVersion.of(25)
 }
 
 tasks.processResources {
