@@ -1,6 +1,8 @@
 package ru.deelter.multieconomy.utils;
 
+import io.github.miniplaceholders.api.MiniPlaceholders;
 import lombok.Getter;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -23,9 +25,11 @@ public class Lang {
 	private final MiniMessage miniMessage = MiniMessage.miniMessage();
 	private String defaultLanguage;
 	private boolean autoDetect;
+	private final boolean miniPlaceholders;
 
 	public Lang(@NotNull MultiEconomy plugin) {
 		this.plugin = plugin;
+		this.miniPlaceholders = isMiniPlaceholdersAvailable();
 		reload();
 	}
 
@@ -41,6 +45,7 @@ public class Lang {
 
 		saveDefaultLang("en.yml");
 		saveDefaultLang("ru.yml");
+		saveDefaultLang("uk.yml");
 
 		File[] files = langFolder.listFiles((dir, name) -> name.endsWith(".yml"));
 		if (files != null) {
@@ -72,13 +77,17 @@ public class Lang {
 
 	@Nullable
 	public Component getMessage(@NotNull String key, @Nullable CommandSender sender, TagResolver... resolvers) {
-		Player player = (sender instanceof Player) ? (Player) sender : null;
-		String raw = resolveRawMessage(key, player);
-		if (raw == null || raw.isEmpty()) {
-			return null;
-		}
-		TagResolver combined = TagResolver.resolver(resolvers);
-		return miniMessage.deserialize(raw, combined);
+		String raw = resolveRawMessage(key, sender instanceof Player player ? player : null);
+		if (raw == null) return null;
+		if (raw.isEmpty()) return null;
+		return parseMessage(raw, sender, resolvers);
+	}
+
+	public Component parseMessage(String raw, @Nullable Audience viewer, TagResolver... resolvers) {
+		TagResolver combined = TagResolver.resolver(TagResolver.resolver(resolvers));
+		if (this.miniPlaceholders)
+			combined = TagResolver.resolver(combined, MiniPlaceholders.audienceGlobalPlaceholders());
+		return miniMessage.deserialize(raw, viewer == null ? Audience.empty() : viewer, combined);
 	}
 
 	// Только строковые плейсхолдеры
@@ -133,5 +142,14 @@ public class Lang {
 			return shortLanguage;
 		}
 		return defaultLanguage;
+	}
+
+	private boolean isMiniPlaceholdersAvailable() {
+		try {
+			Class.forName("io.github.miniplaceholders.api.MiniPlaceholders");
+			return true;
+		} catch (ClassNotFoundException _) {
+			return false;
+		}
 	}
 }

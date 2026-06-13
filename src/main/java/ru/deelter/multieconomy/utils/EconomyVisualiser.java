@@ -82,7 +82,7 @@ public class EconomyVisualiser {
 			player.sendActionBar(Component.join(JoinConfiguration.builder().separator(Component.text(" ")).build(),
 					Arrays.stream(operations)
 							.filter(Objects::nonNull)
-							.map(VisualOperation::toComponent)
+							.map(visualOperation -> visualOperation.toComponent(player))
 							.toList()));
 
 			boolean uncompleted = false;

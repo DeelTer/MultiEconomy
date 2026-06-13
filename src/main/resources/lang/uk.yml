@@ -1,0 +1,14 @@
+# Кольори: Акцент #FFD700 | Текст #C7B9A6
+messages:
+  money-show: "<#C7B9A6>Ваш баланс: <#FFD700><currency_icon> <currency_name> <balance>"
+  money-other: "<#C7B9A6>Баланс гравця <player>: <#FFD700><currency_icon> <currency_name> <balance>"
+  transfer-success: "<#C7B9A6>Ви переказали <#FFD700><amount> <currency_icon> <currency_name><#C7B9A6> гравцю <player>"
+  transfer-fail-insufficient: "<#C7B9A6>Недостатньо коштів"
+  transfer-fail-negative: "<#C7B9A6>Сума має бути додатною"
+  admin-give: "<#C7B9A6>Видано <#FFD700><amount> <currency_icon> <currency_name><#C7B9A6> гравцю <player>"
+  admin-take: "<#C7B9A6>Вилучено <#FFD700><amount> <currency_icon> <currency_name><#C7B9A6> у гравця <player>"
+  admin-set: "<#C7B9A6>Встановлено баланс <player> (<#FFD700><currency_icon> <currency_name><#C7B9A6>): <#FFD700><balance>"
+  error-player-not-found: "<#C7B9A6>Гравця не знайдено"
+  error-currency-not-found: "<#C7B9A6>Валюту не знайдено"
+  error-no-permission: "<#C7B9A6>У вас немає прав"
+  error-invalid-amount: "<#C7B9A6>Невірна сума"

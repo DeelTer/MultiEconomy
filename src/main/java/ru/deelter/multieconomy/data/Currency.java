@@ -1,16 +1,14 @@
 package ru.deelter.multieconomy.data;
 
 import lombok.Value;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 
 @Value
 public class Currency {
     String id;
     String name;
+    String nameMiniMessage;
     String iconMiniMessage;
-    Component icon;
     TextColor color;
     double maxBalance;
     boolean transferable;
@@ -18,12 +16,12 @@ public class Currency {
     boolean primary;
     int decimalPlaces;
 
-    public Currency(String id, String name, String iconMiniMessage, String colorHex, double maxBalance,
+    public Currency(String id, String name, String nameMiniMessage, String iconMiniMessage, String colorHex, double maxBalance,
                     boolean transferable, double transferFee, boolean primary, int decimalPlaces) {
         this.id = id;
         this.name = name;
+        this.nameMiniMessage = nameMiniMessage;
         this.iconMiniMessage = iconMiniMessage;
-        this.icon = MiniMessage.miniMessage().deserialize(iconMiniMessage);
         this.color = (colorHex != null && !colorHex.isEmpty()) ? TextColor.fromHexString(colorHex) : null;
         this.maxBalance = maxBalance;
         this.transferable = transferable;

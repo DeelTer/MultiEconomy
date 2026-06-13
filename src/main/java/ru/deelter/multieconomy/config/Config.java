@@ -38,9 +38,11 @@ public class Config {
         if (configuration.isConfigurationSection("currencies")) {
             for (String id : configuration.getConfigurationSection("currencies").getKeys(false)) {
                 String path = "currencies." + id;
+                String currencyName = configuration.getString(path + ".name", id);
                 CurrencyConfig currency = new CurrencyConfig(
                         id,
-                        configuration.getString(path + ".name", id),
+                        currencyName,
+                        configuration.getString(path + ".display-name", currencyName),
                         configuration.getString(path + ".icon", "<white>" + id + "</white>"),
                         configuration.getString(path + ".color", null),
                         configuration.getDouble(path + ".initial-balance", 0.0),

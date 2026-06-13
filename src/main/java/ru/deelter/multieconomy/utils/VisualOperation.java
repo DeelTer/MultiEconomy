@@ -2,6 +2,7 @@ package ru.deelter.multieconomy.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import ru.deelter.multieconomy.data.Currency;
 
@@ -19,8 +20,8 @@ public class VisualOperation {
 	private double newBalance;
 	private final double maxBalance;
 
-	public Component toComponent() {
-		Component component = EconomyUtils.getVisual(currentBalance, currency);
+	public Component toComponent(Audience viewer) {
+		Component component = EconomyUtils.getVisual(currentBalance, currency, viewer);
 		if (currentBalance >= maxBalance) {
 			component = component.append(Component.text(" / " + maxBalance).color(COLOR_RED));
 		}

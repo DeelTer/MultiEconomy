@@ -57,11 +57,14 @@ public class EcoCommand implements CommandExecutor {
             case "give" -> {
                 MultiEconomy.getInstance().getEconomyManager().addBalance(target.getUniqueId(), currencyId, amount);
                 Component message = lang.getMessage("admin-give", sender,
-                        Map.of("currency_icon", currency.getIcon()),
                         Map.of(
-                                "amount", String.valueOf(amount),
-                                "currency_name", currency.getName(),
-                                "player", playerName
+                            "currency_name", lang.parseMessage(currency.getNameMiniMessage(), sender),
+                            "currency_icon", lang.parseMessage(currency.getIconMiniMessage(), sender)
+                        ),
+                        Map.of(
+                            "currency_id", currency.getId(),
+                            "amount", String.valueOf(amount),
+                            "player", playerName
                         )
                 );
                 if (message != null) sender.sendMessage(message);
@@ -69,11 +72,14 @@ public class EcoCommand implements CommandExecutor {
             case "take" -> {
                 MultiEconomy.getInstance().getEconomyManager().removeBalance(target.getUniqueId(), currencyId, amount);
                 Component message = lang.getMessage("admin-take", sender,
-                        Map.of("currency_icon", currency.getIcon()),
                         Map.of(
-                                "amount", String.valueOf(amount),
-                                "currency_name", currency.getName(),
-                                "player", playerName
+                            "currency_name", lang.parseMessage(currency.getNameMiniMessage(), sender),
+                            "currency_icon", lang.parseMessage(currency.getIconMiniMessage(), sender)
+                        ),
+                        Map.of(
+                            "currency_id", currency.getId(),
+                            "amount", String.valueOf(amount),
+                            "player", playerName
                         )
                 );
                 if (message != null) sender.sendMessage(message);
@@ -81,11 +87,14 @@ public class EcoCommand implements CommandExecutor {
             case "set" -> {
                 MultiEconomy.getInstance().getEconomyManager().setBalance(target.getUniqueId(), currencyId, amount);
                 Component message = lang.getMessage("admin-set", sender,
-                        Map.of("currency_icon", currency.getIcon()),
                         Map.of(
-                                "balance", String.valueOf(amount),
-                                "currency_name", currency.getName(),
-                                "player", playerName
+                            "currency_name", lang.parseMessage(currency.getNameMiniMessage(), sender),
+                            "currency_icon", lang.parseMessage(currency.getIconMiniMessage(), sender)
+                        ),
+                        Map.of(
+                            "currency_id", currency.getId(),
+                            "balance", String.valueOf(amount),
+                            "player", playerName
                         )
                 );
                 if (message != null) sender.sendMessage(message);

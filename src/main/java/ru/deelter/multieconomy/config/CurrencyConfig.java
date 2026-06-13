@@ -8,6 +8,7 @@ import lombok.Getter;
 public class CurrencyConfig {
     private final String id;
     private final String name;
+    private final String nameMiniMessage;
     private final String iconMiniMessage;
     private final String color;
     private final double initialBalance;

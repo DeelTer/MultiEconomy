@@ -1,5 +1,6 @@
 package ru.deelter.multieconomy.utils;
 
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
@@ -25,27 +26,23 @@ public class EconomyUtils {
             .separator(Component.text(" "))
             .build();
 
-    public static Component getIcon(@NotNull Currency currency) {
-        return currency.getIcon();
-    }
-
     public static Sound getSound(double value) {
         return value > 1 ? SOUND_COINS_DROP_SINGLE : SOUND_COINS_DROP_MULTIPLY;
     }
 
-    public static @NotNull Component getVisual(double amount, @NotNull Currency currency) {
+    public static @NotNull Component getVisual(double amount, @NotNull Currency currency, @NotNull Audience audience) {
         Component numberComponent = Component.text(formatAmount(amount, currency.getDecimalPlaces()));
         if (currency.getColor() != null) {
             numberComponent = numberComponent.color(currency.getColor());
         }
         return Component.join(
                 JOIN_CONFIGURATION,
-                currency.getIcon(),
+                MultiEconomy.getInstance().getLang().parseMessage(currency.getIconMiniMessage(), audience),
                 numberComponent
         );
     }
 
-    private static String formatAmount(double amount, int decimalPlaces) {
+    public static String formatAmount(double amount, int decimalPlaces) {
         if (decimalPlaces == 0) {
             return String.valueOf((long) amount);
         }

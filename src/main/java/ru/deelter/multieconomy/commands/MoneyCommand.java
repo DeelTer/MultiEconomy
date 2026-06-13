@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.deelter.multieconomy.MultiEconomy;
 import ru.deelter.multieconomy.data.Currency;
+import ru.deelter.multieconomy.utils.EconomyUtils;
 import ru.deelter.multieconomy.utils.Lang;
 
 import java.util.Map;
@@ -44,11 +45,14 @@ public class MoneyCommand implements CommandExecutor {
         String playerName = target.getName() != null ? target.getName() : "Unknown";
 
         Component message = lang.getMessage(key, sender,
-                Map.of("currency_icon", primaryCurrency.getIcon()),
                 Map.of(
-                        "player", playerName,
-                        "balance", String.valueOf(balance),
-                        "currency_name", primaryCurrency.getName()
+                    "currency_name", lang.parseMessage(primaryCurrency.getNameMiniMessage(), sender),
+                    "currency_icon", lang.parseMessage(primaryCurrency.getIconMiniMessage(), sender)
+                ),
+                Map.of(
+                    "currency_id", primaryCurrency.getId(),
+                    "player", playerName,
+                    "balance", EconomyUtils.formatAmount(balance, primaryCurrency.getDecimalPlaces())
                 )
         );
         if (message != null) sender.sendMessage(message);

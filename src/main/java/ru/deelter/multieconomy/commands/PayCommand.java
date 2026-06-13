@@ -66,11 +66,14 @@ public class PayCommand implements CommandExecutor {
 
         if (success) {
             Component message = lang.getMessage("transfer-success", sender,
-                    Map.of("currency_icon", primaryCurrency.getIcon()),
                     Map.of(
-                            "amount", String.valueOf(amount),
-                            "currency_name", primaryCurrency.getName(),
-                            "player", targetName
+                        "currency_name", lang.parseMessage(primaryCurrency.getNameMiniMessage(), sender),
+                        "currency_icon", lang.parseMessage(primaryCurrency.getIconMiniMessage(), sender)
+                    ),
+                    Map.of(
+                        "currency_id", primaryCurrency.getId(),
+                        "amount", String.valueOf(amount),
+                        "player", targetName
                     )
             );
             if (message != null) sender.sendMessage(message);

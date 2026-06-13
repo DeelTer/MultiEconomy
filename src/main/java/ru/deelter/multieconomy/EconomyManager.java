@@ -32,6 +32,7 @@ public class EconomyManager {
 			Currency currency = new Currency(
 					configuration.getId(),
 					configuration.getName(),
+					configuration.getNameMiniMessage(),
 					configuration.getIconMiniMessage(),
 					configuration.getColor(),
 					configuration.getMaxBalance(),
