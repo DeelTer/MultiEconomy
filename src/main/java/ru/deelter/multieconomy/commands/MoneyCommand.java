@@ -1,6 +1,7 @@
 package ru.deelter.multieconomy.commands;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -42,16 +43,20 @@ public class MoneyCommand implements CommandExecutor {
                 .getBalance(target.getUniqueId(), primaryCurrency.getId());
 
         String key = target.equals(sender) ? "money-show" : "money-other";
-        String playerName = target.getName() != null ? target.getName() : "Unknown";
+
+        Component targetName
+            = target instanceof Player targetPlayer
+            ? targetPlayer.displayName().hoverEvent(HoverEvent.showEntity(targetPlayer.getType().getKey(), targetPlayer.getUniqueId()))
+            : Component.text(target.getName() == null ? target.getUniqueId().toString() : target.getName());
 
         Component message = lang.getMessage(key, sender,
                 Map.of(
                     "currency_name", lang.parseMessage(primaryCurrency.getNameMiniMessage(), sender),
-                    "currency_icon", lang.parseMessage(primaryCurrency.getIconMiniMessage(), sender)
+                    "currency_icon", lang.parseMessage(primaryCurrency.getIconMiniMessage(), sender),
+                    "player", targetName
                 ),
                 Map.of(
                     "currency_id", primaryCurrency.getId(),
-                    "player", playerName,
                     "balance", EconomyUtils.formatAmount(balance, primaryCurrency.getDecimalPlaces())
                 )
         );

@@ -1,14 +1,17 @@
 package ru.deelter.multieconomy.commands;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.deelter.multieconomy.MultiEconomy;
 import ru.deelter.multieconomy.data.Currency;
+import ru.deelter.multieconomy.utils.EconomyUtils;
 import ru.deelter.multieconomy.utils.Lang;
 
 import java.util.Map;
@@ -51,7 +54,10 @@ public class EcoCommand implements CommandExecutor {
             return true;
         }
 
-        String playerName = target.getName() != null ? target.getName() : "Unknown";
+        Component targetName
+            = target instanceof Player targetPlayer
+            ? targetPlayer.displayName().hoverEvent(HoverEvent.showEntity(targetPlayer.getType().getKey(), targetPlayer.getUniqueId()))
+            : Component.text(target.getName() == null ? target.getUniqueId().toString() : target.getName());
 
         switch (action) {
             case "give" -> {
@@ -59,12 +65,12 @@ public class EcoCommand implements CommandExecutor {
                 Component message = lang.getMessage("admin-give", sender,
                         Map.of(
                             "currency_name", lang.parseMessage(currency.getNameMiniMessage(), sender),
-                            "currency_icon", lang.parseMessage(currency.getIconMiniMessage(), sender)
+                            "currency_icon", lang.parseMessage(currency.getIconMiniMessage(), sender),
+                            "player", targetName
                         ),
                         Map.of(
                             "currency_id", currency.getId(),
-                            "amount", String.valueOf(amount),
-                            "player", playerName
+                            "amount", EconomyUtils.formatAmount(amount, currency.getDecimalPlaces())
                         )
                 );
                 if (message != null) sender.sendMessage(message);
@@ -74,12 +80,12 @@ public class EcoCommand implements CommandExecutor {
                 Component message = lang.getMessage("admin-take", sender,
                         Map.of(
                             "currency_name", lang.parseMessage(currency.getNameMiniMessage(), sender),
-                            "currency_icon", lang.parseMessage(currency.getIconMiniMessage(), sender)
+                            "currency_icon", lang.parseMessage(currency.getIconMiniMessage(), sender),
+                            "player", targetName
                         ),
                         Map.of(
                             "currency_id", currency.getId(),
-                            "amount", String.valueOf(amount),
-                            "player", playerName
+                            "amount", EconomyUtils.formatAmount(amount, currency.getDecimalPlaces())
                         )
                 );
                 if (message != null) sender.sendMessage(message);
@@ -89,12 +95,12 @@ public class EcoCommand implements CommandExecutor {
                 Component message = lang.getMessage("admin-set", sender,
                         Map.of(
                             "currency_name", lang.parseMessage(currency.getNameMiniMessage(), sender),
-                            "currency_icon", lang.parseMessage(currency.getIconMiniMessage(), sender)
+                            "currency_icon", lang.parseMessage(currency.getIconMiniMessage(), sender),
+                            "player", targetName
                         ),
                         Map.of(
                             "currency_id", currency.getId(),
-                            "balance", String.valueOf(amount),
-                            "player", playerName
+                            "balance", EconomyUtils.formatAmount(amount, currency.getDecimalPlaces())
                         )
                 );
                 if (message != null) sender.sendMessage(message);
