@@ -2,6 +2,7 @@ package ru.deelter.multieconomy.commands;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -52,7 +53,7 @@ public class MoneyCommand implements CommandExecutor {
         Component message = lang.getMessage(key, sender,
                 Map.of(
                     "currency_name", lang.parseMessage(primaryCurrency.getNameMiniMessage(), sender),
-                    "currency_icon", lang.parseMessage(primaryCurrency.getIconMiniMessage(), sender),
+                    "currency_icon", lang.parseMessage(primaryCurrency.getIconMiniMessage(), sender, Placeholder.unparsed("amount", String.valueOf(balance))),
                     "player", targetName
                 ),
                 Map.of(

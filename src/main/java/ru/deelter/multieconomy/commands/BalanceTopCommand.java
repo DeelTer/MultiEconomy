@@ -2,6 +2,7 @@ package ru.deelter.multieconomy.commands;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -37,7 +38,7 @@ public class BalanceTopCommand implements CommandExecutor {
 			OfflinePlayer player = Bukkit.getOfflinePlayer(entry.getKey());
 			String name = player.getName() != null ? player.getName() : "Unknown";
 			Component line = Component.text(rank + ". " + name + ": ", NamedTextColor.WHITE)
-					.append(lang.parseMessage(currency.getIconMiniMessage(), sender))
+					.append(lang.parseMessage(currency.getIconMiniMessage(), sender, Placeholder.unparsed("amount", String.valueOf(entry.getValue()))))
 					.append(Component.text(" " + entry.getValue(), NamedTextColor.YELLOW));
 			sender.sendMessage(line);
 			rank++;

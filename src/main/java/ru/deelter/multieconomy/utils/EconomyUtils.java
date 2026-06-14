@@ -6,6 +6,7 @@ import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.jetbrains.annotations.NotNull;
 import ru.deelter.multieconomy.MultiEconomy;
 import ru.deelter.multieconomy.data.Currency;
@@ -37,7 +38,7 @@ public class EconomyUtils {
         }
         return Component.join(
                 JOIN_CONFIGURATION,
-                MultiEconomy.getInstance().getLang().parseMessage(currency.getIconMiniMessage(), audience),
+                MultiEconomy.getInstance().getLang().parseMessage(currency.getIconMiniMessage(), audience, Placeholder.unparsed("amount", String.valueOf(amount))),
                 numberComponent
         );
     }
