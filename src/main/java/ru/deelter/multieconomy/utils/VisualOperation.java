@@ -35,6 +35,9 @@ public class VisualOperation {
 		} else {
 			currentBalance += delta;
 		}
+		if (isCompleted()) {
+			currentBalance = newBalance;
+		}
 	}
 
 	public boolean isCompleted() {
