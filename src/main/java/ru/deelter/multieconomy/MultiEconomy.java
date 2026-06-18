@@ -10,6 +10,7 @@ import ru.deelter.multieconomy.database.ConnectionPool;
 import ru.deelter.multieconomy.database.DatabaseInitializer;
 import ru.deelter.multieconomy.database.DatabaseType;
 import ru.deelter.multieconomy.database.EconomyDAO;
+import ru.deelter.multieconomy.listeners.DeathBalanceFeeListener;
 import ru.deelter.multieconomy.listeners.EconomyListener;
 import ru.deelter.multieconomy.utils.Lang;
 import ru.deelter.multieconomy.vault.VaultEconomyProvider;
@@ -45,6 +46,7 @@ public final class MultiEconomy extends JavaPlugin {
 
 		registerCommands();
 		Bukkit.getPluginManager().registerEvents(new EconomyListener(), this);
+		Bukkit.getPluginManager().registerEvents(new DeathBalanceFeeListener(), this);
 
 		if (Bukkit.getPluginManager().getPlugin("MiniPlaceholders") != null) {
 			MiniPlaceholdersExpansion.register(this);

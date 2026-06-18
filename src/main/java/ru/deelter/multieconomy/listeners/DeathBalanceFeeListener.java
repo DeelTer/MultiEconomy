@@ -16,6 +16,7 @@ public class DeathBalanceFeeListener implements Listener {
 
 		Player player = event.getPlayer();
 		Currency primary = MultiEconomy.getInstance().getEconomyManager().getPrimaryCurrency();
+		if (primary == null) return;
 		double current = MultiEconomy.getInstance().getEconomyManager().getBalance(player.getUniqueId(), primary.getId());
 		double loss = current * fee;
 		MultiEconomy.getInstance().getEconomyManager().removeBalance(player.getUniqueId(), primary.getId(), loss);
